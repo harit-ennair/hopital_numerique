@@ -20,10 +20,6 @@ public interface Iconsultation {
     List<Consultation> findByRoom(Room room);
     List<Consultation> findByDate(LocalDate date);
     List<Consultation> findByStatus(Status status);
-    List<Consultation> findByPatientId(int patientId);
-    List<Consultation> findByDoctorId(int doctorId);
-    List<Consultation> findByDateRange(LocalDate startDate, LocalDate endDate);
-    List<Consultation> findByDoctorAndDate(Doctor doctor, LocalDate date);
     boolean isRoomAvailable(Room room, LocalDate date, LocalTime time);
     boolean isDoctorAvailable(Doctor doctor, LocalDate date, LocalTime time);
 }
