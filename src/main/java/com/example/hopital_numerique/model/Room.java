@@ -25,6 +25,7 @@ public class Room {
         this.timeSlots = timeSlots;
     }
 
+
     public Room() {
     }
 

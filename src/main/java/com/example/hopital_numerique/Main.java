@@ -27,8 +27,9 @@ public class Main {
             EntityManager em = emf.createEntityManager();
             DepartmentDao departmentDao = new DepartmentDao();
             Department department = new Department();
-            department.setName("Cardiology");
-            departmentDao.save(department);
+//            department.setName("Orthopedics");
+//            departmentDao.save(department);
+            System.out.println(departmentDao.findAll());
 
             em.getTransaction().begin();
             em.getTransaction().commit();

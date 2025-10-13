@@ -17,7 +17,7 @@ public class Consultation {
     private LocalTime hour;
     @Enumerated(EnumType.STRING)
     @Column(name = "status_name")
-    private Status statusByName;
+    private Status status;
 
     private String report;
     @ManyToOne
@@ -30,11 +30,11 @@ public class Consultation {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public Consultation(int id, LocalDate date, LocalTime hour, Status statusByName, String report, Patient patient, Doctor doctor, Room room) {
+    public Consultation(int id, LocalDate date, LocalTime hour, Status status, String report, Patient patient, Doctor doctor, Room room) {
         this.id = id;
         this.date = date;
         this.hour = hour;
-        this.statusByName = statusByName;
+        this.status = status;
         this.report = report;
         this.patient = patient;
         this.doctor = doctor;
@@ -68,12 +68,12 @@ public class Consultation {
         this.hour = hour;
     }
 
-    public Status getStatusByName() {
-        return statusByName;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setStatusByName(Status statusByName) {
-        this.statusByName = statusByName;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getReport() {
@@ -114,7 +114,7 @@ public class Consultation {
                 "id=" + id +
                 ", date=" + date +
                 ", hour=" + hour +
-                ", statusByName=" + statusByName +
+                ", status=" + status +
                 ", report='" + report + '\'' +
                 ", patient=" + patient +
                 ", doctor=" + doctor +
