@@ -14,7 +14,7 @@ public class Doctor extends Person {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Consultation> consultations;
 
     public Doctor(String firstName, String lastName, String email, String password, String role, String specialty, Department department, List<Consultation> consultations) {

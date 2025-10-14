@@ -16,7 +16,7 @@ public class Consultation {
     private LocalDate date;
     private LocalTime hour;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status_name")
+    @Column(name = "status")
     private Status status;
 
     private String report;

@@ -12,7 +12,7 @@ public class Patient extends Person {
     private float weight;
     private float height;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Consultation> consultations;
 
     public Patient(String firstName, String lastName, String email, String password, String role, float weight, float height, List<Consultation> consultations) {

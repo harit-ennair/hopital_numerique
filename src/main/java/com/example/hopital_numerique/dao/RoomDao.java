@@ -1,106 +1,117 @@
 package com.example.hopital_numerique.dao;
 
-import com.example.hopital_numerique.dao.daoInterfaces.Ipatient;
-import com.example.hopital_numerique.model.Patient;
+import com.example.hopital_numerique.dao.daoInterfaces.Iroom;
+import com.example.hopital_numerique.model.Room;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
 import java.util.List;
 
-public class patientDao implements Ipatient {
+public class RoomDao implements Iroom {
     @Override
-    public void save(Patient patient) {
+    public void save(Room room) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.persist(patient);
+        em.persist(room);
         em.getTransaction().commit();
         em.close();
         emf.close();
-
     }
 
     @Override
-    public void update(Patient patient) {
+    public void update(Room room) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.merge(patient);
+        em.merge(room);
         em.getTransaction().commit();
         em.close();
         emf.close();
-
     }
 
     @Override
-    public void delete(int patientId) {
+    public void delete(int roomId) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        Patient patient = em.find(Patient.class, patientId);
-        if (patient != null) {
+        Room room = em.find(Room.class, roomId);
+        if (room != null) {
             em.getTransaction().begin();
-            em.remove(patient);
+            em.remove(room);
             em.getTransaction().commit();
         }
         em.close();
         emf.close();
-
     }
 
     @Override
-    public Patient findById(int patientId) {
+    public Room findById(int roomId) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        Patient patient = em.find(Patient.class, patientId);
+        Room room = em.find(Room.class, roomId);
         em.close();
         emf.close();
-        return patient;
+        return room;
     }
 
     @Override
-    public Patient findByEmail(String email) {
+    public Room findByName(String name) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        Patient patient = em.createQuery("SELECT p FROM Patient p WHERE p.email = :email", Patient.class)
-                .setParameter("email", email)
+        Room room = em.createQuery("SELECT r FROM Room r WHERE r.name = :name", Room.class)
+                .setParameter("name", name)
                 .getSingleResult();
         em.close();
         emf.close();
-        return patient;
+        return room;
     }
 
     @Override
-    public List<Patient> findAll() {
+    public List<Room> findAll() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        List<Patient> patients = em.createQuery("SELECT p FROM Patient p", Patient.class).getResultList();
+        List<Room> rooms = em.createQuery("SELECT r FROM Room r", Room.class).getResultList();
         em.close();
         emf.close();
-        return patients;
+        return rooms;
     }
 
     @Override
-    public List<Patient> findByFirstName(String firstName) {
+    public List<Room> findByCapacity(int capacity) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        List<Patient> patients = em.createQuery("SELECT p FROM Patient p WHERE p.firstName = :firstName", Patient.class)
-                .setParameter("firstName", firstName)
+        List<Room> rooms = em.createQuery("SELECT r FROM Room r WHERE r.capacity = :capacity", Room.class)
+                .setParameter("capacity", capacity)
                 .getResultList();
         em.close();
         emf.close();
-        return patients;
+        return rooms;
     }
 
     @Override
-    public List<Patient> findByLastName(String lastName) {
+    public List<Room> findAvailableRooms(LocalDate date) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        List<Patient> patients = em.createQuery("SELECT p FROM Patient p WHERE p.lastName = :lastName", Patient.class)
-                .setParameter("lastName", lastName)
+        List<Room> rooms = em.createQuery("SELECT r FROM Room r WHERE r.id NOT IN " +
+                        "(SELECT c.room.id FROM Consultation c WHERE c.date = :date)", Room.class)
+                .setParameter("date", date)
                 .getResultList();
         em.close();
         emf.close();
-        return patients;
+        return rooms;
+    }
+
+    @Override
+    public List<Room> findByCapacityGreaterThan(int minCapacity) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        EntityManager em = emf.createEntityManager();
+        List<Room> rooms = em.createQuery("SELECT r FROM Room r WHERE r.capacity > :minCapacity", Room.class)
+                .setParameter("minCapacity", minCapacity)
+                .getResultList();
+        em.close();
+        emf.close();
+        return rooms;
     }
 }

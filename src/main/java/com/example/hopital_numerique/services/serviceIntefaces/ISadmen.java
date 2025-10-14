@@ -28,7 +28,6 @@ public interface ISadmen {
     void updateRoom(Room room);
     void deleteRoom(Room room);
     void assignRoomToConsultation(Consultation consultation, Room room);
-    void isRoomAvailable(Room room, LocalDate date, LocalTime time);
     List<Room> getAllRooms();
     List<Room> getAvailableRooms(Room room);
 

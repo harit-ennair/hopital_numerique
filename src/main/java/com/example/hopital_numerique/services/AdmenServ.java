@@ -158,25 +158,7 @@ public class AdmenServ implements ISadmen {
 
     }
 //=======================================================================================================
-    @Override
-    public void isRoomAvailable(Room room, LocalDate date, LocalTime Hour) {
-        if(room.getId() <= 0) {
-            throw new IllegalArgumentException("Room ID cannot be null");
-        }
-        if(date == null || Hour == null) {
-            throw new IllegalArgumentException("Date and Time cannot be null");
-        }
-        List<Consultation> consultations = consultationDao.findAll().stream().filter(c ->
-                c.getRoom() != null &&
-                c.getRoom().getId() == room.getId() &&
-                c.getDate().isEqual(date) &&
-                c.getHour().equals(Hour) &&
-                (c.getStatus() == Status.VALIDATED || c.getStatus() == Status.PENDING)
-        ).toList();
-        if(!consultations.isEmpty()) {
-            throw new IllegalStateException("Room is not available at the given date and time");
-        }
-    }
+
 
     @Override
     public List<Room> getAvailableRooms(Room room) {

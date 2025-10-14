@@ -1,8 +1,6 @@
 package com.example.hopital_numerique.dao;
 
-import com.example.hopital_numerique.dao.daoInterfaces.Idoctor;
-import com.example.hopital_numerique.model.Department;
-import com.example.hopital_numerique.model.Doctor;
+import com.example.hopital_numerique.dao.daoInterfaces.Ipatient;
 import com.example.hopital_numerique.model.Patient;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -10,13 +8,13 @@ import jakarta.persistence.Persistence;
 
 import java.util.List;
 
-public class doctorDao implements Idoctor {
+public class PatientDao implements Ipatient {
     @Override
-    public void save(Doctor doctor) {
+    public void save(Patient patient) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.persist(doctor);
+        em.persist(patient);
         em.getTransaction().commit();
         em.close();
         emf.close();
@@ -24,11 +22,11 @@ public class doctorDao implements Idoctor {
     }
 
     @Override
-    public void update(Doctor doctor) {
+    public void update(Patient patient) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.merge(doctor);
+        em.merge(patient);
         em.getTransaction().commit();
         em.close();
         emf.close();
@@ -36,13 +34,13 @@ public class doctorDao implements Idoctor {
     }
 
     @Override
-    public void delete(int doctorId) {
+    public void delete(int patientId) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        Doctor doctor = em.find(Doctor.class, doctorId);
-        if (doctor != null) {
+        Patient patient = em.find(Patient.class, patientId);
+        if (patient != null) {
             em.getTransaction().begin();
-            em.remove(doctor);
+            em.remove(patient);
             em.getTransaction().commit();
         }
         em.close();
@@ -51,82 +49,58 @@ public class doctorDao implements Idoctor {
     }
 
     @Override
-    public Doctor findById(int doctorId) {
+    public Patient findById(int patientId) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        Doctor doctor = em.find(Doctor.class, doctorId);
+        Patient patient = em.find(Patient.class, patientId);
         em.close();
         emf.close();
-        return doctor;
+        return patient;
     }
 
     @Override
-    public Doctor findByEmail(String email) {
+    public Patient findByEmail(String email) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        Doctor doctor = em.createQuery("SELECT d FROM Doctor d WHERE d.email = :email", Doctor.class)
+        Patient patient = em.createQuery("SELECT p FROM Patient p WHERE p.email = :email", Patient.class)
                 .setParameter("email", email)
                 .getSingleResult();
         em.close();
         emf.close();
-        return doctor;
+        return patient;
     }
 
     @Override
-    public List<Doctor> findAll() {
+    public List<Patient> findAll() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        List<Doctor> doctors = em.createQuery("SELECT d FROM Doctor d", Doctor.class).getResultList();
+        List<Patient> patients = em.createQuery("SELECT p FROM Patient p", Patient.class).getResultList();
         em.close();
         emf.close();
-        return doctors;
+        return patients;
     }
 
     @Override
-    public List<Doctor> findBySpecialty(String specialty) {
+    public List<Patient> findByFirstName(String firstName) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        List<Doctor> doctors = em.createQuery("SELECT d FROM Doctor d WHERE d.specialty = :specialty", Doctor.class)
-                .setParameter("specialty", specialty)
-                .getResultList();
-        em.close();
-        emf.close();
-        return doctors;
-    }
-
-    @Override
-    public List<Doctor> findByDepartment(Department department) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-        EntityManager em = emf.createEntityManager();
-        List<Doctor> doctors = em.createQuery("SELECT d FROM Doctor d WHERE d.department = :department", Doctor.class)
-                .setParameter("department", department)
-                .getResultList();
-        em.close();
-        emf.close();
-        return doctors;
-    }
-
-    @Override
-    public List<Doctor> findByFirstName(String firstName) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-        EntityManager em = emf.createEntityManager();
-        List<Doctor> doctors = em.createQuery("SELECT d FROM Doctor d WHERE d.firstName = :firstName", Doctor.class)
+        List<Patient> patients = em.createQuery("SELECT p FROM Patient p WHERE p.firstName = :firstName", Patient.class)
                 .setParameter("firstName", firstName)
                 .getResultList();
         em.close();
         emf.close();
-        return doctors;
+        return patients;
     }
 
     @Override
-    public List<Doctor> findByLastName(String lastName) {
+    public List<Patient> findByLastName(String lastName) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
-        List<Doctor> doctors = em.createQuery("SELECT d FROM Doctor d WHERE d.lastName = :lastName", Doctor.class)
+        List<Patient> patients = em.createQuery("SELECT p FROM Patient p WHERE p.lastName = :lastName", Patient.class)
                 .setParameter("lastName", lastName)
                 .getResultList();
         em.close();
         emf.close();
-        return doctors;
+        return patients;
     }
 }

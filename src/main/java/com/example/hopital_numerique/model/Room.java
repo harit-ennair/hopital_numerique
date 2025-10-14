@@ -16,13 +16,14 @@ public class Room {
     private String name;
     @Column(nullable = false)
     private int capacity;
-    private List<LocalDate> timeSlots;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
+    private List<Consultation> consultations;
 
-    public Room(int id, String name, int capacity, List<LocalDate> timeSlots) {
+    public Room(int id, String name, int capacity, List<Consultation> consultations) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
-        this.timeSlots = timeSlots;
+        this.consultations = consultations;
     }
 
 
@@ -53,12 +54,12 @@ public class Room {
         this.capacity = capacity;
     }
 
-    public List<LocalDate> getTimeSlots() {
-        return timeSlots;
+    public List<Consultation> getConsultation() {
+        return consultations;
     }
 
-    public void setTimeSlots(List<LocalDate> timeSlots) {
-        this.timeSlots = timeSlots;
+    public void setConsultation(List<Consultation> consultations) {
+        this.consultations = consultations;
     }
 
     @Override
@@ -67,7 +68,7 @@ public class Room {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", capacity=" + capacity +
-                ", timeSlots=" + timeSlots +
+                ", consultations=" + consultations +
                 '}';
     }
 }

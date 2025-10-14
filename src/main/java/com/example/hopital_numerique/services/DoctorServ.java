@@ -3,6 +3,7 @@ package com.example.hopital_numerique.services;
 import com.example.hopital_numerique.dao.daoInterfaces.*;
 import com.example.hopital_numerique.model.Consultation;
 import com.example.hopital_numerique.model.Doctor;
+import com.example.hopital_numerique.services.serviceIntefaces.ISadmen;
 import com.example.hopital_numerique.services.serviceIntefaces.ISdoctor;
 
 import java.util.List;
@@ -12,19 +13,13 @@ import com.example.hopital_numerique.model.Status;
 
 public class DoctorServ implements ISdoctor {
 
-Idepartment departmentDao;
-Idoctor doctorDao;
-Iroom roomDao;
-Iconsultation consultationDao;
-Ipatient patientDao;
+    Iconsultation consultationDao;
+    ISadmen admenServ;
 
-public DoctorServ (Idepartment departmentDao , Idoctor doctorDao , Iroom roomDao , Iconsultation consultationDao , Ipatient patientDao) {
-    this.patientDao = patientDao;
-    this.roomDao = roomDao;
-    this.departmentDao = departmentDao;
-    this.doctorDao = doctorDao;
-    this.consultationDao = consultationDao;
-}
+    public DoctorServ (Iconsultation consultationDao , ISadmen admenServ) {
+        this.admenServ = admenServ;
+        this.consultationDao = consultationDao;
+    }
     @Override
     public List<Consultation> getDoctorConsultations(Doctor doctor) {
         if(doctor == null) {
