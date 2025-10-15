@@ -111,38 +111,38 @@
     </style>
 </head>
 <body>
-<div class="login-container">
-    <div class="login-header">
-        <h1>Welcome Back</h1>
-        <p>Please sign in to your account</p>
-    </div>
-
-    <%-- Display error message if login failed --%>
-    <% if (request.getAttribute("error") != null) { %>
-    <div class="error-message">
-        <%= request.getAttribute("error") %>
-    </div>
-    <% } %>
-
-    <form action="<%= request.getContextPath() %>/login" method="post">
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" required
-                   value="<%= request.getParameter("email") != null ? request.getParameter("email") : "" %>">
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Please sign in to your account</p>
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+        <%-- Display error message if login failed --%>
+        <% if (request.getAttribute("error") != null) { %>
+            <div class="error-message">
+                <%= request.getAttribute("error") %>
+            </div>
+        <% } %>
+
+        <form action="<%= request.getContextPath() %>/login" method="post">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required
+                       value="<%= request.getParameter("email") != null ? request.getParameter("email") : "" %>">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+
+        <div class="signup-link">
+            <p>Don't have an account? <a href="<%= request.getContextPath() %>/signup">Sign up here</a></p>
         </div>
-
-        <button type="submit" class="login-btn">Sign In</button>
-    </form>
-
-    <div class="signup-link">
-        <p>Don't have an account? <a href="<%= request.getContextPath() %>/signup">Sign up here</a></p>
     </div>
-</div>
 </body>
 </html>
 

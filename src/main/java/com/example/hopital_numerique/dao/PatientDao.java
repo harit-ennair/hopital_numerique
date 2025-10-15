@@ -8,7 +8,7 @@ import jakarta.persistence.Persistence;
 
 import java.util.List;
 
-public class PatientDao implements Ipatient {
+public class PatientDao extends PersonDao implements Ipatient {
     @Override
     public void save(Patient patient) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
@@ -58,17 +58,6 @@ public class PatientDao implements Ipatient {
         return patient;
     }
 
-    @Override
-    public Patient findByEmail(String email) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-        EntityManager em = emf.createEntityManager();
-        Patient patient = em.createQuery("SELECT p FROM Patient p WHERE p.email = :email", Patient.class)
-                .setParameter("email", email)
-                .getSingleResult();
-        em.close();
-        emf.close();
-        return patient;
-    }
 
     @Override
     public List<Patient> findAll() {

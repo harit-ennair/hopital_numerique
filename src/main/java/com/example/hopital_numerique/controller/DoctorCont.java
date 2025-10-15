@@ -1,4 +1,6 @@
 package com.example.hopital_numerique.controller;
 
-public class DoctorCont {
+import com.example.hopital_numerique.controller.controllerInterfaces.ICdoctor;
+
+public class DoctorCont implements ICdoctor {
 }

@@ -9,7 +9,7 @@ public interface Idoctor {
     void update(Doctor doctor);
     void delete(int doctorId);
     Doctor findById(int doctorId);
-    Doctor findByEmail(String email);
+//    Doctor findByEmail(String email);
     List<Doctor> findAll();
     List<Doctor> findBySpecialty(String specialty);
     List<Doctor> findByDepartment(Department department);

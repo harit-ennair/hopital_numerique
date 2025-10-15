@@ -1,6 +1,8 @@
 package com.example.hopital_numerique.services;
 
 import com.example.hopital_numerique.dao.daoInterfaces.*;
+import com.example.hopital_numerique.dao.daoInterfaces.Ipatient;
+
 import com.example.hopital_numerique.model.*;
 import com.example.hopital_numerique.services.serviceIntefaces.ISpatien;
 
@@ -13,14 +15,27 @@ public class PatientServ implements ISpatien {
     Idoctor doctorDao;
     Iroom roomDao;
     Iconsultation consultationDao;
+    Ipatient patientDao;
 
-    public PatientServ(Iconsultation consultationDao , Idoctor doctorDao , Iroom roomDao) {
+    public PatientServ(Iconsultation consultationDao , Idoctor doctorDao , Iroom roomDao , Ipatient patientDao) {
         this.roomDao = roomDao;
         this.doctorDao = doctorDao;
         this.consultationDao = consultationDao;
+        this.patientDao = patientDao;
 
     }
 
+    @Override
+    public Patient addPatient(Patient patient) {
+        if(patient.getHeight() == 0 || patient.getWeight()== 0) {
+            throw new IllegalArgumentException("Height and Weight cannot be zero");
+        }
+        patientDao.save(patient);
+        return patient;
+
+    }
+
+    @Override
     public boolean isRoomAvailable(Consultation consultation) {
         Room roomById = roomDao.findById(consultation.getRoom().getId());
         if (roomById == null) {
@@ -39,6 +54,7 @@ public class PatientServ implements ISpatien {
         return isAvailable(consultation, doctorById.getConsultations());
     }
 
+    @Override
     public boolean isAvailable(Consultation consultation, List<Consultation> consultations) {
         LocalTime time = consultation.getDate().atTime(consultation.getHour()).toLocalTime();
         int minute = time.getMinute();
@@ -55,9 +71,6 @@ public class PatientServ implements ISpatien {
 
         return consultations.stream().noneMatch(c -> c.getDate().equals(consultation.getDate()));
     }
-
-
-
 
 
 

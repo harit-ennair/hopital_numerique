@@ -8,7 +8,7 @@ public interface Ipatient {
     void update(Patient patient);
     void delete(int patientId);
     Patient findById(int patientId);
-    Patient findByEmail(String email);
+//    Patient findByEmail(String email);
     List<Patient> findAll();
     List<Patient> findByFirstName(String firstName);
     List<Patient> findByLastName(String lastName);

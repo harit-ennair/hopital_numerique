@@ -59,17 +59,6 @@ public class DoctorDao implements Idoctor {
         return doctor;
     }
 
-    @Override
-    public Doctor findByEmail(String email) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-        EntityManager em = emf.createEntityManager();
-        Doctor doctor = em.createQuery("SELECT d FROM Doctor d WHERE d.email = :email", Doctor.class)
-                .setParameter("email", email)
-                .getSingleResult();
-        em.close();
-        emf.close();
-        return doctor;
-    }
 
     @Override
     public List<Doctor> findAll() {
