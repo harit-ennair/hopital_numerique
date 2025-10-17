@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Hopital Numerique</title>
+    <title>Reports - Hopital Numerique</title>
     <style>
         * {
             margin: 0;
@@ -69,7 +69,7 @@
             transition: all 0.2s ease;
         }
 
-        .nav-item a:hover {
+        .nav-item a:hover, .nav-item a.active {
             background: #f1f5f9;
             color: #3b82f6;
         }
@@ -95,86 +95,76 @@
             padding: 3rem 2rem;
         }
 
-        .hero-section {
+        .page-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
         }
 
-        .hero-section h1 {
+        .page-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             color: #1e293b;
             margin-bottom: 1rem;
-            letter-spacing: -0.025em;
         }
 
-        .hero-section p {
+        .page-header p {
             font-size: 1.125rem;
             color: #64748b;
-            max-width: 600px;
-            margin: 0 auto;
         }
 
-        .stats-grid {
+        .reports-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
         }
 
-        .stat-card {
+        .report-card {
             background: white;
             padding: 2rem;
             border-radius: 12px;
             border: 1px solid #e2e8f0;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
             transition: all 0.2s ease;
         }
 
-        .stat-card:hover {
+        .report-card:hover {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transform: translateY(-2px);
         }
 
-        .stat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .stat-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .stat-icon {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 8px;
+        .report-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
             color: white;
         }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
+        .report-title {
+            font-size: 1.125rem;
+            font-weight: 600;
             color: #1e293b;
             margin-bottom: 0.5rem;
         }
 
-        .stat-label {
+        .report-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-label {
             color: #64748b;
             font-size: 0.875rem;
         }
 
-        .quick-actions {
+        .chart-section {
             background: white;
             padding: 2rem;
             border-radius: 12px;
@@ -182,36 +172,24 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .quick-actions h2 {
+        .chart-title {
             font-size: 1.5rem;
             font-weight: 600;
             color: #1e293b;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
         }
 
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .action-btn {
+        .chart-placeholder {
+            height: 300px;
+            background: #f8fafc;
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
             display: flex;
             align-items: center;
-            padding: 1rem;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #334155;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .action-btn:hover {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
+            justify-content: center;
+            color: #64748b;
+            font-size: 1.125rem;
         }
 
         .error-message {
@@ -232,11 +210,11 @@
                 padding: 2rem 1rem;
             }
 
-            .hero-section h1 {
+            .page-header h1 {
                 font-size: 2rem;
             }
 
-            .stats-grid {
+            .reports-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -253,16 +231,16 @@
                 <li class="nav-item"><a href="<%= request.getContextPath() %>/admin/departments">Departments</a></li>
                 <li class="nav-item"><a href="<%= request.getContextPath() %>/admin/rooms">Rooms</a></li>
                 <li class="nav-item"><a href="<%= request.getContextPath() %>/admin/consultations">Consultations</a></li>
-                <li class="nav-item"><a href="<%= request.getContextPath() %>/admin/reports">Reports</a></li>
+                <li class="nav-item"><a href="<%= request.getContextPath() %>/admin/reports" class="active">Reports</a></li>
                 <li class="nav-item"><a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="main-container">
-        <div class="hero-section">
-            <h1>Admin Dashboard</h1>
-            <p>Welcome back, <%= user.getFirstName() %>! Manage your hospital system with ease.</p>
+        <div class="page-header">
+            <h1>Hospital Reports</h1>
+            <p>Comprehensive analytics and insights for hospital management</p>
         </div>
 
         <% if (request.getAttribute("error") != null) { %>
@@ -271,65 +249,49 @@
             </div>
         <% } %>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Total Departments</span>
-                    <div class="stat-icon" style="background: #3b82f6;">🏥</div>
+        <div class="reports-grid">
+            <div class="report-card">
+                <div class="report-icon" style="background: #3b82f6;">📊</div>
+                <div class="report-title">Total Consultations</div>
+                <div class="report-value" style="color: #3b82f6;">
+                    <%= request.getAttribute("totalConsultations") != null ? request.getAttribute("totalConsultations") : 0 %>
                 </div>
-                <div class="stat-number"><%= request.getAttribute("totalDepartments") != null ? request.getAttribute("totalDepartments") : 0 %></div>
-                <div class="stat-label">Active departments</div>
+                <div class="report-label">All time consultations</div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Total Doctors</span>
-                    <div class="stat-icon" style="background: #10b981;">👨‍⚕️</div>
+            <div class="report-card">
+                <div class="report-icon" style="background: #f59e0b;">⏳</div>
+                <div class="report-title">Pending Consultations</div>
+                <div class="report-value" style="color: #f59e0b;">
+                    <%= request.getAttribute("pendingConsultations") != null ? request.getAttribute("pendingConsultations") : 0 %>
                 </div>
-                <div class="stat-number"><%= request.getAttribute("totalDoctors") != null ? request.getAttribute("totalDoctors") : 0 %></div>
-                <div class="stat-label">Registered doctors</div>
+                <div class="report-label">Awaiting confirmation</div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Total Rooms</span>
-                    <div class="stat-icon" style="background: #f59e0b;">🛏️</div>
+            <div class="report-card">
+                <div class="report-icon" style="background: #10b981;">✅</div>
+                <div class="report-title">Validated Consultations</div>
+                <div class="report-value" style="color: #10b981;">
+                    <%= request.getAttribute("validatedConsultations") != null ? request.getAttribute("validatedConsultations") : 0 %>
                 </div>
-                <div class="stat-number"><%= request.getAttribute("totalRooms") != null ? request.getAttribute("totalRooms") : 0 %></div>
-                <div class="stat-label">Available rooms</div>
+                <div class="report-label">Confirmed appointments</div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Total Consultations</span>
-                    <div class="stat-icon" style="background: #8b5cf6;">📋</div>
+            <div class="report-card">
+                <div class="report-icon" style="background: #ef4444;">❌</div>
+                <div class="report-title">Cancelled Consultations</div>
+                <div class="report-value" style="color: #ef4444;">
+                    <%= request.getAttribute("cancelledConsultations") != null ? request.getAttribute("cancelledConsultations") : 0 %>
                 </div>
-                <div class="stat-number"><%= request.getAttribute("totalConsultations") != null ? request.getAttribute("totalConsultations") : 0 %></div>
-                <div class="stat-label">All consultations</div>
+                <div class="report-label">Cancelled appointments</div>
             </div>
         </div>
 
-        <div class="quick-actions">
-            <h2>Quick Actions</h2>
-            <div class="action-grid">
-                <a href="<%= request.getContextPath() %>/admin/patients" class="action-btn">
-                    👥 Manage Patients
-                </a>
-                <a href="<%= request.getContextPath() %>/admin/doctors" class="action-btn">
-                    👨‍⚕️ Manage Doctors
-                </a>
-                <a href="<%= request.getContextPath() %>/admin/departments" class="action-btn">
-                    🏥 Manage Departments
-                </a>
-                <a href="<%= request.getContextPath() %>/admin/rooms" class="action-btn">
-                    🛏️ Manage Rooms
-                </a>
-                <a href="<%= request.getContextPath() %>/admin/consultations" class="action-btn">
-                    📋 View Consultations
-                </a>
-                <a href="<%= request.getContextPath() %>/admin/reports" class="action-btn">
-                    📊 Generate Reports
-                </a>
+        <div class="chart-section">
+            <h2 class="chart-title">Consultation Status Overview</h2>
+            <div class="chart-placeholder">
+                📈 Chart visualization would be displayed here<br>
+                <small>Integrate with Chart.js or similar library for dynamic charts</small>
             </div>
         </div>
     </div>

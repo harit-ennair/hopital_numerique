@@ -13,117 +13,144 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            line-height: 1.6;
+            color: #334155;
+            padding: 2rem 1rem;
         }
 
         .signup-container {
             background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            width: 450px;
-            max-width: 90%;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #e2e8f0;
         }
 
         .signup-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .signup-header h1 {
-            color: #333;
+            color: #1e293b;
+            font-size: 1.875rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
         }
 
         .signup-header p {
-            color: #666;
-            font-size: 0.9rem;
+            color: #64748b;
+            font-size: 0.875rem;
         }
 
         .form-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
 
         .form-group {
-            flex: 1;
             margin-bottom: 1.5rem;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #333;
+            color: #374151;
             font-weight: 500;
+            font-size: 0.875rem;
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e1e5e9;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.2s ease;
+            background: white;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .signup-btn {
             width: 100%;
-            padding: 0.75rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0.875rem;
+            background: #3b82f6;
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: background-color 0.2s ease;
+            margin-bottom: 1.5rem;
         }
 
         .signup-btn:hover {
-            transform: translateY(-2px);
+            background: #2563eb;
         }
 
         .login-link {
             text-align: center;
-            margin-top: 1.5rem;
         }
 
         .login-link a {
-            color: #667eea;
+            color: #3b82f6;
             text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
 
         .login-link a:hover {
+            color: #2563eb;
             text-decoration: underline;
         }
 
         .error-message {
-            background: #fee;
-            color: #c33;
+            background: #fef2f2;
+            color: #dc2626;
             padding: 0.75rem;
             border-radius: 8px;
-            margin-bottom: 1rem;
-            border-left: 4px solid #c33;
+            margin-bottom: 1.5rem;
+            border: 1px solid #fecaca;
+            font-size: 0.875rem;
         }
 
         .success-message {
-            background: #efe;
-            color: #363;
+            background: #f0fdf4;
+            color: #16a34a;
             padding: 0.75rem;
             border-radius: 8px;
-            margin-bottom: 1rem;
-            border-left: 4px solid #363;
+            margin-bottom: 1.5rem;
+            border: 1px solid #bbf7d0;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .signup-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
         }
     </style>
 </head>
@@ -131,7 +158,7 @@
     <div class="signup-container">
         <div class="signup-header">
             <h1>Create Account</h1>
-            <p>Join Hopital Numerique as a patient</p>
+            <p>Join our hospital management system</p>
         </div>
 
         <%-- Display error message if signup failed --%>
@@ -197,4 +224,3 @@
     </div>
 </body>
 </html>
-

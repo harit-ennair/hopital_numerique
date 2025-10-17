@@ -128,7 +128,7 @@ public class ConsulltationDao implements Iconsultation {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         List<Consultation> consultations = em.createQuery(
-            "SELECT c FROM Consultation c WHERE c.statusByName = :status", Consultation.class)
+            "SELECT c FROM Consultation c WHERE c.status = :status", Consultation.class)
             .setParameter("status", status)
             .getResultList();
         em.close();
@@ -141,7 +141,7 @@ public class ConsulltationDao implements Iconsultation {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         Long count = em.createQuery(
-            "SELECT COUNT(c) FROM Consultation c WHERE c.room = :room AND c.date = :date AND c.hour = :time AND c.statusByName IN ('RESERVED', 'VALIDATED')", Long.class)
+            "SELECT COUNT(c) FROM Consultation c WHERE c.room = :room AND c.date = :date AND c.hour = :time AND c.status IN ('RESERVED', 'VALIDATED')", Long.class)
             .setParameter("room", room)
             .setParameter("date", date)
             .setParameter("time", time)
@@ -156,7 +156,7 @@ public class ConsulltationDao implements Iconsultation {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager em = emf.createEntityManager();
         Long count = em.createQuery(
-            "SELECT COUNT(c) FROM Consultation c WHERE c.doctor = :doctor AND c.date = :date AND c.hour = :time AND c.statusByName IN ('RESERVED', 'VALIDATED')", Long.class)
+            "SELECT COUNT(c) FROM Consultation c WHERE c.doctor = :doctor AND c.date = :date AND c.hour = :time AND c.status IN ('RESERVED', 'VALIDATED')", Long.class)
             .setParameter("doctor", doctor)
             .setParameter("date", date)
             .setParameter("time", time)

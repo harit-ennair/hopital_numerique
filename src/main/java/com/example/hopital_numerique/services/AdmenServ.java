@@ -1,10 +1,7 @@
 package com.example.hopital_numerique.services;
 
 import com.example.hopital_numerique.dao.DepartmentDao;
-import com.example.hopital_numerique.dao.daoInterfaces.Iconsultation;
-import com.example.hopital_numerique.dao.daoInterfaces.Idepartment;
-import com.example.hopital_numerique.dao.daoInterfaces.Idoctor;
-import com.example.hopital_numerique.dao.daoInterfaces.Iroom;
+import com.example.hopital_numerique.dao.daoInterfaces.*;
 import com.example.hopital_numerique.model.*;
 import com.example.hopital_numerique.services.serviceIntefaces.ISadmen;
 
@@ -18,12 +15,14 @@ public class AdmenServ implements ISadmen {
     Idoctor doctorDao;
     Iroom roomDao;
     Iconsultation consultationDao;
+    Ipatient patientDao;
 
-    public AdmenServ(Idepartment departmentDao , Idoctor doctorDao , Iroom roomDao , Iconsultation consultationDao) {
+    public AdmenServ(Idepartment departmentDao , Idoctor doctorDao , Iroom roomDao , Iconsultation consultationDao , Ipatient patientDao) {
         this.roomDao = roomDao;
         this.departmentDao = departmentDao;
         this.doctorDao = doctorDao;
         this.consultationDao = consultationDao;
+        this.patientDao = patientDao;
     }
 
     @Override
@@ -122,7 +121,7 @@ public class AdmenServ implements ISadmen {
 
     @Override
     public Room createRoom(Room room) {
-        if(room.getId() <= 0 || room.getName() == null || room.getName().isEmpty() ||
+        if(room.getName() == null || room.getName().isEmpty() ||
            room.getCapacity() <= 0) {
             throw new IllegalArgumentException("Room fields cannot be null or empty");
         }
@@ -156,6 +155,28 @@ public class AdmenServ implements ISadmen {
         }
         consultation.setRoom(room);
 
+    }
+
+    public List<Patient>  getAllPatients() {
+        return patientDao.findAll();
+    }
+
+    public Patient updatePatient(Patient patient) {
+        if(patient.getId() <= 0 ||
+           patient.getFirstName() == null || patient.getFirstName().isEmpty() ||
+           patient.getLastName() == null || patient.getLastName().isEmpty() ||
+           patient.getEmail() == null || patient.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Patient fields cannot be null or empty");
+        }
+        patientDao.update(patient);
+        return patient;
+    }
+
+    public  void deletePatient(Patient patient) {
+        if(patient.getId() <= 0) {
+            throw new IllegalArgumentException("Patient ID cannot be null");
+        }
+        patientDao.delete(patient.getId());
     }
 //=======================================================================================================
 

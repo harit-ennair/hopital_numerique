@@ -1,11 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.example.hopital_numerique.model.Person" %>
+<%@ page import="com.example.hopital_numerique.model.Doctor" %>
 <%
     Person user = (Person) session.getAttribute("user");
     if (user == null || !"DOCTOR".equals(user.getRole())) {
         response.sendRedirect(request.getContextPath() + "/login");
         return;
     }
+    Doctor doctor = (Doctor) user;
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,239 +23,324 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: #f5f6fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
+            line-height: 1.6;
+            color: #334155;
         }
 
-        .header {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-            color: white;
-            padding: 1rem 2rem;
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .header h1 {
+        .nav-brand {
             font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            text-decoration: none;
         }
 
-        .user-info {
+        .nav-menu {
             display: flex;
+            list-style: none;
+            gap: 2rem;
             align-items: center;
-            gap: 1rem;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item a:hover, .nav-item a.active {
+            background: #f1f5f9;
+            color: #3b82f6;
         }
 
         .logout-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
+            background: #f1f5f9;
+            color: #64748b;
             padding: 0.5rem 1rem;
             border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
 
         .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
+            background: #ef4444;
+            color: white;
         }
 
-        .container {
+        .main-container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            margin: 0 auto;
+            padding: 3rem 2rem;
         }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
         }
 
-        .card {
+        .hero-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .hero-section p {
+            font-size: 1.125rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .welcome-card {
             background: white;
             padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            color: #333;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .card p {
-            color: #666;
+        .welcome-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin-bottom: 1.5rem;
-            line-height: 1.6;
         }
 
-        .card-btn {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        .doctor-avatar {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: transform 0.2s;
-            text-decoration: none;
-            display: inline-block;
+            font-size: 1.5rem;
+            font-weight: 600;
         }
 
-        .card-btn:hover {
-            transform: translateY(-2px);
+        .doctor-info h2 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .doctor-info p {
+            color: #64748b;
+            margin-top: 0.25rem;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
         .stat-card {
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+            color: white;
         }
 
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #2ecc71;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            color: #666;
-            font-size: 0.9rem;
+            color: #64748b;
+            font-size: 0.875rem;
         }
 
-        .schedule-card {
+        .quick-actions {
             background: white;
             padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            grid-column: 1 / -1;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .schedule-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .quick-actions h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
             margin-bottom: 1.5rem;
+            text-align: center;
         }
 
-        .appointment-item {
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
             padding: 1rem;
-            border-left: 4px solid #2ecc71;
-            background: #f8f9fa;
-            margin-bottom: 1rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
 
-        .appointment-time {
-            font-weight: bold;
-            color: #2ecc71;
+        .action-btn:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
         }
 
-        .appointment-patient {
-            color: #333;
-            flex-grow: 1;
-            margin-left: 1rem;
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .main-container {
+                padding: 2rem 1rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .welcome-header {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>Doctor Dashboard</h1>
-        <div class="user-info">
-            <span>Dr. <%= user.getFirstName() %> <%= user.getLastName() %></span>
-            <form action="<%= request.getContextPath() %>/logout" method="post" style="display: inline;">
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="<%= request.getContextPath() %>/doctor" class="nav-brand">Hopital Numerique</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="<%= request.getContextPath() %>/doctor" class="active">Dashboard</a></li>
+                <li class="nav-item"><a href="<%= request.getContextPath() %>/doctor/consultations">My Consultations</a></li>
+                <li class="nav-item"><a href="<%= request.getContextPath() %>/doctor/schedule">Schedule</a></li>
+                <li class="nav-item"><a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a></li>
+            </ul>
         </div>
-    </header>
+    </nav>
 
-    <div class="container">
+    <div class="main-container">
+        <div class="hero-section">
+            <h1>Doctor Portal</h1>
+            <p>Manage your consultations and patient appointments efficiently</p>
+        </div>
+
+        <div class="welcome-card">
+            <div class="welcome-header">
+                <div class="doctor-avatar">
+                    <%= doctor.getFirstName().substring(0, 1).toUpperCase() %><%= doctor.getLastName().substring(0, 1).toUpperCase() %>
+                </div>
+                <div class="doctor-info">
+                    <h2>Dr. <%= doctor.getFirstName() %> <%= doctor.getLastName() %></h2>
+                    <p><%= doctor.getSpecialty() %> • <%= doctor.getDepartment() != null ? doctor.getDepartment().getName() : "General" %> Department</p>
+                </div>
+            </div>
+            <p>Welcome to your personalized dashboard. Here you can view your upcoming consultations, manage your schedule, and access patient information.</p>
+        </div>
+
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number">0</div>
+                <div class="stat-icon" style="background: #3b82f6;">📅</div>
+                <div class="stat-number">12</div>
                 <div class="stat-label">Today's Appointments</div>
             </div>
+
             <div class="stat-card">
-                <div class="stat-number">0</div>
-                <div class="stat-label">Total Patients</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">0</div>
-                <div class="stat-label">Pending Consultations</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">0</div>
+                <div class="stat-icon" style="background: #10b981;">✅</div>
+                <div class="stat-number">8</div>
                 <div class="stat-label">Completed Today</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #f59e0b;">⏰</div>
+                <div class="stat-number">4</div>
+                <div class="stat-label">Upcoming</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #8b5cf6;">👥</div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">Total Patients</div>
             </div>
         </div>
 
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3>My Patients</h3>
-                <p>View and manage your assigned patients, review medical histories and treatment plans.</p>
-                <a href="<%= request.getContextPath() %>/doctor/patients" class="card-btn">View Patients</a>
-            </div>
-
-            <div class="card">
-                <h3>Consultations</h3>
-                <p>Schedule new consultations, review upcoming appointments, and manage patient visits.</p>
-                <a href="<%= request.getContextPath() %>/doctor/consultations" class="card-btn">Manage Consultations</a>
-            </div>
-
-            <div class="card">
-                <h3>Medical Records</h3>
-                <p>Access and update patient medical records, add diagnoses, and prescribe treatments.</p>
-                <a href="<%= request.getContextPath() %>/doctor/records" class="card-btn">Medical Records</a>
-            </div>
-
-            <div class="card">
-                <h3>Schedule</h3>
-                <p>View your daily schedule, manage availability, and handle appointment requests.</p>
-                <a href="<%= request.getContextPath() %>/doctor/schedule" class="card-btn">View Schedule</a>
-            </div>
-
-            <div class="schedule-card">
-                <div class="schedule-header">
-                    <h3>Today's Schedule</h3>
-                    <span style="color: #666; font-size: 0.9rem;">
-                        <%= new java.text.SimpleDateFormat("EEEE, MMMM d, yyyy").format(new java.util.Date()) %>
-                    </span>
-                </div>
-
-                <div class="appointment-item">
-                    <div class="appointment-time">09:00 AM</div>
-                    <div class="appointment-patient">No appointments scheduled</div>
-                </div>
-
-                <div style="text-align: center; margin-top: 1rem;">
-                    <a href="<%= request.getContextPath() %>/doctor/schedule" class="card-btn">View Full Schedule</a>
-                </div>
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-grid">
+                <a href="<%= request.getContextPath() %>/doctor/consultations" class="action-btn">
+                    📋 View Consultations
+                </a>
+                <a href="<%= request.getContextPath() %>/doctor/schedule" class="action-btn">
+                    📅 Manage Schedule
+                </a>
+                <a href="<%= request.getContextPath() %>/doctor/patients" class="action-btn">
+                    👥 Patient Records
+                </a>
+                <a href="<%= request.getContextPath() %>/doctor/reports" class="action-btn">
+                    📊 Generate Reports
+                </a>
             </div>
         </div>
     </div>
 </body>
 </html>
-
