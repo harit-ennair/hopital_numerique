@@ -7,6 +7,7 @@ import com.example.hopital_numerique.services.serviceIntefaces.ISadmen;
 import com.example.hopital_numerique.services.serviceIntefaces.ISdoctor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.hopital_numerique.model.Status;
 
@@ -25,7 +26,7 @@ public class DoctorServ implements ISdoctor {
         if(doctor == null) {
             throw new IllegalArgumentException("Doctor cannot be null");
         }
-        return consultationDao.findAll().stream().filter(consultation -> consultation.getDoctor().equals(doctor)).toList();
+        return consultationDao.findAll().stream().filter(consultation -> consultation.getDoctor().equals(doctor)).collect(Collectors.toList());
     }
 
     @Override
@@ -103,7 +104,7 @@ public class DoctorServ implements ISdoctor {
             throw new IllegalArgumentException("Doctor cannot be null");
         }
         return consultationDao.findAll().stream().filter(consultation ->
-                consultation.getDoctor().equals(doctor) && consultation.getStatus() == Status.PENDING).toList();
+                consultation.getDoctor().equals(doctor) && consultation.getStatus() == Status.PENDING).collect(Collectors.toList());
     }
 
     @Override
@@ -115,6 +116,6 @@ public class DoctorServ implements ISdoctor {
             throw new IllegalArgumentException("Doctor is not assigned to this consultation");
         }
         return consultationDao.findByStatus(consultation.getStatus()).stream().filter(c ->
-                c.getDoctor().equals(doctor)).toList();
+                c.getDoctor().equals(doctor)).collect(Collectors.toList());
     }
 }

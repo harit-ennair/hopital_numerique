@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.example.hopital_numerique.model.Person" %>
 <%@ page import="com.example.hopital_numerique.model.Doctor" %>
+<%@ page import="com.example.hopital_numerique.model.Consultation" %>
+<%@ page import="java.util.List" %>
 <%
     Person user = (Person) session.getAttribute("user");
     if (user == null || !"DOCTOR".equals(user.getRole())) {
@@ -8,6 +10,12 @@
         return;
     }
     Doctor doctor = (Doctor) user;
+
+    Long totalConsultations = (Long) request.getAttribute("totalConsultations");
+    Long pendingCount = (Long) request.getAttribute("pendingCount");
+    Long completedCount = (Long) request.getAttribute("completedCount");
+    Long validatedCount = (Long) request.getAttribute("validatedCount");
+    List<Consultation> recentConsultations = (List<Consultation>) request.getAttribute("recentConsultations");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,16 +38,14 @@
             color: #334155;
         }
 
-        .navbar {
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .nav-container {
+        .header-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
@@ -48,299 +54,267 @@
             align-items: center;
         }
 
-        .nav-brand {
+        .logo {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: #3b82f6;
-            text-decoration: none;
+            font-weight: bold;
         }
 
-        .nav-menu {
+        .user-info {
             display: flex;
-            list-style: none;
-            gap: 2rem;
             align-items: center;
-        }
-
-        .nav-item a {
-            text-decoration: none;
-            color: #64748b;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item a:hover, .nav-item a.active {
-            background: #f1f5f9;
-            color: #3b82f6;
-        }
-
-        .logout-btn {
-            background: #f1f5f9;
-            color: #64748b;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .logout-btn:hover {
-            background: #ef4444;
-            color: white;
+            gap: 1rem;
         }
 
         .main-container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            gap: 2rem;
         }
 
-        .hero-section {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .hero-section h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 1rem;
-            letter-spacing: -0.025em;
-        }
-
-        .hero-section p {
-            font-size: 1.125rem;
-            color: #64748b;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .welcome-card {
+        .welcome-section {
             background: white;
             padding: 2rem;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            margin-bottom: 3rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .welcome-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .doctor-avatar {
-            width: 4rem;
-            height: 4rem;
-            border-radius: 50%;
-            background: #3b82f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .doctor-info h2 {
+        .welcome-title {
+            font-size: 2rem;
             color: #1e293b;
-            font-size: 1.5rem;
-            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
-        .doctor-info p {
+        .welcome-subtitle {
             color: #64748b;
-            margin-top: 0.25rem;
+            font-size: 1.1rem;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .stat-card {
             background: white;
             padding: 2rem;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             text-align: center;
-            transition: all 0.2s ease;
+            border-left: 4px solid;
         }
 
-        .stat-card:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .stat-icon {
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin: 0 auto 1rem;
-            color: white;
-        }
+        .stat-card.total { border-left-color: #3b82f6; }
+        .stat-card.pending { border-left-color: #f59e0b; }
+        .stat-card.completed { border-left-color: #10b981; }
+        .stat-card.validated { border-left-color: #8b5cf6; }
 
         .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1e293b;
+            font-size: 2.5rem;
+            font-weight: bold;
             margin-bottom: 0.5rem;
         }
 
+        .stat-card.total .stat-number { color: #3b82f6; }
+        .stat-card.pending .stat-number { color: #f59e0b; }
+        .stat-card.completed .stat-number { color: #10b981; }
+        .stat-card.validated .stat-number { color: #8b5cf6; }
+
         .stat-label {
             color: #64748b;
-            font-size: 0.875rem;
+            font-size: 1rem;
         }
 
-        .quick-actions {
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-card {
             background: white;
             padding: 2rem;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .quick-actions h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
+        .nav-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-card h3 {
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .nav-card p {
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        .nav-card .nav-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .recent-consultations {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .recent-consultations h2 {
             color: #1e293b;
             margin-bottom: 1.5rem;
-            text-align: center;
+            font-size: 1.5rem;
         }
 
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .action-btn {
+        .consultation-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
             padding: 1rem;
-            background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            text-decoration: none;
-            color: #334155;
+            margin-bottom: 1rem;
+        }
+
+        .consultation-info h4 {
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .consultation-info p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 500;
-            transition: all 0.2s ease;
         }
 
-        .action-btn:hover {
-            background: #3b82f6;
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-validated {
+            background: #ddd6fe;
+            color: #7c3aed;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-refused {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
             color: white;
-            border-color: #3b82f6;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.2s;
         }
 
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-
-            .main-container {
-                padding: 2rem 1rem;
-            }
-
-            .hero-section h1 {
-                font-size: 2rem;
-            }
-
-            .welcome-header {
-                flex-direction: column;
-                text-align: center;
-            }
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+            text-decoration: none;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="<%= request.getContextPath() %>/doctor" class="nav-brand">Hopital Numerique</a>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="<%= request.getContextPath() %>/doctor" class="active">Dashboard</a></li>
-                <li class="nav-item"><a href="<%= request.getContextPath() %>/doctor/consultations">My Consultations</a></li>
-                <li class="nav-item"><a href="<%= request.getContextPath() %>/doctor/schedule">Schedule</a></li>
-                <li class="nav-item"><a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a></li>
-            </ul>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">🏥 Hopital Numerique</div>
+            <div class="user-info">
+                <span>Dr. <%= doctor.getFirstName() %> <%= doctor.getLastName() %></span>
+                <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
+            </div>
         </div>
-    </nav>
+    </header>
 
     <div class="main-container">
-        <div class="hero-section">
-            <h1>Doctor Portal</h1>
-            <p>Manage your consultations and patient appointments efficiently</p>
-        </div>
-
-        <div class="welcome-card">
-            <div class="welcome-header">
-                <div class="doctor-avatar">
-                    <%= doctor.getFirstName().substring(0, 1).toUpperCase() %><%= doctor.getLastName().substring(0, 1).toUpperCase() %>
-                </div>
-                <div class="doctor-info">
-                    <h2>Dr. <%= doctor.getFirstName() %> <%= doctor.getLastName() %></h2>
-                    <p><%= doctor.getSpecialty() %> • <%= doctor.getDepartment() != null ? doctor.getDepartment().getName() : "General" %> Department</p>
-                </div>
-            </div>
-            <p>Welcome to your personalized dashboard. Here you can view your upcoming consultations, manage your schedule, and access patient information.</p>
+        <div class="welcome-section">
+            <h1 class="welcome-title">Welcome, Dr. <%= doctor.getLastName() %></h1>
+            <p class="welcome-subtitle">Department: <%= doctor.getDepartment() != null ? doctor.getDepartment().getName() : "Not Assigned" %></p>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #3b82f6;">📅</div>
-                <div class="stat-number">12</div>
-                <div class="stat-label">Today's Appointments</div>
+            <div class="stat-card total">
+                <div class="stat-number"><%= totalConsultations != null ? totalConsultations : 0 %></div>
+                <div class="stat-label">Total Consultations</div>
             </div>
-
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #10b981;">✅</div>
-                <div class="stat-number">8</div>
-                <div class="stat-label">Completed Today</div>
+            <div class="stat-card pending">
+                <div class="stat-number"><%= pendingCount != null ? pendingCount : 0 %></div>
+                <div class="stat-label">Pending Appointments</div>
             </div>
-
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #f59e0b;">⏰</div>
-                <div class="stat-number">4</div>
-                <div class="stat-label">Upcoming</div>
+            <div class="stat-card validated">
+                <div class="stat-number"><%= validatedCount != null ? validatedCount : 0 %></div>
+                <div class="stat-label">Validated Consultations</div>
             </div>
-
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #8b5cf6;">👥</div>
-                <div class="stat-number">156</div>
-                <div class="stat-label">Total Patients</div>
+            <div class="stat-card completed">
+                <div class="stat-number"><%= completedCount != null ? completedCount : 0 %></div>
+                <div class="stat-label">Completed Consultations</div>
             </div>
         </div>
 
-        <div class="quick-actions">
-            <h2>Quick Actions</h2>
-            <div class="action-grid">
-                <a href="<%= request.getContextPath() %>/doctor/consultations" class="action-btn">
-                    📋 View Consultations
-                </a>
-                <a href="<%= request.getContextPath() %>/doctor/schedule" class="action-btn">
-                    📅 Manage Schedule
-                </a>
-                <a href="<%= request.getContextPath() %>/doctor/patients" class="action-btn">
-                    👥 Patient Records
-                </a>
-                <a href="<%= request.getContextPath() %>/doctor/reports" class="action-btn">
-                    📊 Generate Reports
-                </a>
-            </div>
+        <div class="navigation-grid">
+            <a href="<%= request.getContextPath() %>/doctor/appointments" class="nav-card">
+                <div class="nav-icon">📅</div>
+                <h3>Appointments</h3>
+                <p>View and manage pending appointments</p>
+            </a>
+            <a href="<%= request.getContextPath() %>/doctor/consultations" class="nav-card">
+                <div class="nav-icon">📋</div>
+                <h3>Consultations</h3>
+                <p>View all consultations and add reports</p>
+            </a>
+            <a href="<%= request.getContextPath() %>/doctor/profile" class="nav-card">
+                <div class="nav-icon">👤</div>
+                <h3>Profile</h3>
+                <p>View and update your profile information</p>
+            </a>
         </div>
+
+        <% if (recentConsultations != null && !recentConsultations.isEmpty()) { %>
+        <div class="recent-consultations">
+            <h2>Recent Consultations</h2>
+            <% for (Consultation consultation : recentConsultations) { %>
+            <div class="consultation-item">
+                <div class="consultation-info">
+                    <h4>Patient: <%= consultation.getPatient().getFirstName() %> <%= consultation.getPatient().getLastName() %></h4>
+                    <p>Date: <%= consultation.getDate() %></p>
+                </div>
+                <span class="status-badge status-<%= consultation.getStatus().toString().toLowerCase() %>">
+                    <%= consultation.getStatus() %>
+                </span>
+            </div>
+            <% } %>
+        </div>
+        <% } %>
     </div>
 </body>
 </html>
